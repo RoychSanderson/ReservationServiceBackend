@@ -1,0 +1,29 @@
+version: "4.15"
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    container_name: db
+    environment:
+      - POSTGRES_DB=reservations
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=2345
+#      - POSTGRES_PASSWORD=111
+
+  app:
+    image: "reservation-back:latest"
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/reservations
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=2345
+#      - SPRING_DATASOURCE_PASSWORD=111
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
